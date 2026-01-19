@@ -1,0 +1,5 @@
+{
+    "dotenvlocation": ".env",
+    "wordslocation": "words.json",
+    "port": 6969
+}
