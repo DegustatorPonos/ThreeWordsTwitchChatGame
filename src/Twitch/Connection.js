@@ -3,6 +3,15 @@ export function PrintAuthLink() {
 }
 
 export var twitchSocket = null;
+// The OAuth token that Twitch uses for auth
+export var AccessToken = undefined;
+// The token that came from the user
+export var UserToken = undefined;
+// The ID of the authorized user of the app
+export var UserId = undefined;
+// The ID of websocket connection
+export var WebSocketId = undefined;
+
 var OnConnect = () => {}
 
 export function SetConnectCallback(callback) {
@@ -12,11 +21,22 @@ export function SetConnectCallback(callback) {
 export async function Connect(req, res) {
     console.log(req.query);
     res.write("thanks");
-    var access_token = await exchangeCode(req.query.code);
-    console.log(access_token);
+    var OAuth_resp = await exchangeCode(req.query.code);
+    console.log(OAuth_resp);
+    var access_token = OAuth_resp.access_token;
+    AccessToken = access_token;
+    UserToken = req.query.code;
 
     twitchSocket = new WebSocket("wss://eventsub.wss.twitch.tv/ws");
-    OnConnect();
+    twitchSocket.addEventListener("message", ev => {
+        var data = JSON.parse(ev.data);
+        console.log(data);
+        if (data.metadata.message_type != "session_welcome") return;
+        WebSocketId = data.payload.session.id;
+    })
+    setTimeout(() => {
+        OnConnect();
+    }, 1000)
 }
 
 function getAuthLink() {
