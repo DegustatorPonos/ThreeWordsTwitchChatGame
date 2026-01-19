@@ -1,0 +1,24 @@
+{
+  "name": "threewordstwitchchatgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DegustatorPonos/ThreeWordsTwitchChatGame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DegustatorPonos/ThreeWordsTwitchChatGame/issues"
+  },
+  "homepage": "https://github.com/DegustatorPonos/ThreeWordsTwitchChatGame#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  }
+}

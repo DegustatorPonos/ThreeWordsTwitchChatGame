@@ -1,5 +1,3 @@
 {
-    "dotenvlocation": ".env",
-    "wordslocation": "words.json",
-    "port": 6969
+    "ChannelName": "physickdev"
 }
