@@ -1,5 +1,5 @@
 {
     "ChannelName": "physickdev",
     "WordsList": "Words.json",
-    "GameTimeout": 100000
+    "GameTimeout": 10000
 }

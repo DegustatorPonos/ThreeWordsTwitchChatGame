@@ -58,7 +58,7 @@ class Game {
         assert(oldId != this.sessionId); 
         // Setting up the game end
         setTimeout(() => {
-            if (this.sessionId != oldId+1) return;
+            if (!this.isActive || this.sessionId != oldId+1) return;
             this.Stop({ Success: false });
         }, Settings.GameTimeout);
         console.log("The game started");
@@ -70,7 +70,7 @@ class Game {
     Stop(reason) {
         this.isActive = false;
         if (reason.Success) {
-            console.log("The game ended: someone guessed the words");
+            console.log(`The game ended: ${reason.WinnerName} guessed the words!`);
         } else {
             console.log("The game ended: no one guessed the words");
         }
@@ -119,7 +119,10 @@ export function HandleMessage(message) {
         var guessed = CurrentGame.GetGuessedWords(message);
         console.log(`Guessed ${guessed} word(s)`)
         if (guessed == CurrentGame.Task.words.length && CurrentGame.CheckWinCondition(message)) {
-            console.log(`This is a win!`)
+            CurrentGame.Stop({
+                Success: true,
+                WinnerName: message.payload.event.chatter_user_name,
+            })
         }
     } catch (ex) {
         console.error(`Failed to check the message: ${ex}`);
