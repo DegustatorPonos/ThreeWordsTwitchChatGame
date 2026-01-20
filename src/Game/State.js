@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import { Settings } from "../Settings.js";
 import { assert, trace } from "console";
+import { DisplayGameEnd, DisplayGameStart, DisplayPartialGuess } from "./Render.js";
 
 class Tuple {
     words;
@@ -50,18 +51,19 @@ class Game {
     Start() {
         if (this.isActive) return;
         try {
-        this.Task = this.GetNextWords();
-        this.isActive = true;
-        var oldId = this.sessionId;
-        this.sessionId++;
-        // Temp: checking the ptr break
-        assert(oldId != this.sessionId); 
-        // Setting up the game end
-        setTimeout(() => {
-            if (!this.isActive || this.sessionId != oldId+1) return;
-            this.Stop({ Success: false });
-        }, Settings.GameTimeout);
-        console.log("The game started");
+            this.Task = this.GetNextWords();
+            this.isActive = true;
+            var oldId = this.sessionId;
+            this.sessionId++;
+            // Temp: checking the ptr break
+            assert(oldId != this.sessionId); 
+            // Setting up the game end
+            setTimeout(() => {
+                if (!this.isActive || this.sessionId != oldId+1) return;
+                this.Stop({ Success: false });
+            }, Settings.GameTimeout);
+            console.log("The game started");
+            DisplayGameStart();
         } catch (err) {
             console.error(`Failed to start a round: ${err}`)
         }
@@ -71,8 +73,10 @@ class Game {
         this.isActive = false;
         if (reason.Success) {
             console.log(`The game ended: ${reason.WinnerName} guessed the words!`);
+            DisplayGameEnd(reason.WinnerName, this.Task.words);
         } else {
             console.log("The game ended: no one guessed the words");
+            DisplayGameEnd(null, this.Task.words);
         }
     }
 
@@ -118,6 +122,7 @@ export function HandleMessage(message) {
     try {
         var guessed = CurrentGame.GetGuessedWords(message);
         console.log(`Guessed ${guessed} word(s)`)
+        DisplayPartialGuess(message.payload.event.chatter_user_name, guessed);
         if (guessed == CurrentGame.Task.words.length && CurrentGame.CheckWinCondition(message)) {
             CurrentGame.Stop({
                 Success: true,
