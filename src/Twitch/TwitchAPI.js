@@ -16,7 +16,6 @@ export async function GetChannel(username) {
             outp = obj;
         });
     })
-    console.log(outp);
     if (outp.data.length < 1) {
         return null;
     }
@@ -37,7 +36,6 @@ export async function GetSelf() {
             outp = obj;
         });
     });
-    console.log(outp);
     if (outp.data.length < 1) {
         return null;
     }

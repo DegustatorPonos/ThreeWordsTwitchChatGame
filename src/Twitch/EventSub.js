@@ -38,10 +38,5 @@ async function SubToEnent(body) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-    }).then(resp => {
-        resp.json().then(j => {
-            console.log("Sub: ");
-            console.log(j);
-        });
     });
 }

@@ -19,10 +19,8 @@ export function SetConnectCallback(callback) {
 }
 
 export async function Connect(req, res) {
-    console.log(req.query);
     res.write("thanks");
     var OAuth_resp = await exchangeCode(req.query.code);
-    console.log(OAuth_resp);
     var access_token = OAuth_resp.access_token;
     AccessToken = access_token;
     UserToken = req.query.code;
@@ -30,7 +28,6 @@ export async function Connect(req, res) {
     twitchSocket = new WebSocket("wss://eventsub.wss.twitch.tv/ws");
     twitchSocket.addEventListener("message", ev => {
         var data = JSON.parse(ev.data);
-        console.log(data);
         if (data.metadata.message_type != "session_welcome") return;
         WebSocketId = data.payload.session.id;
     })
@@ -56,7 +53,6 @@ async function exchangeCode(userCode) {
 		grant_type: "authorization_code",
 		redirect_uri: "http://localhost:3000/auth",
     }).toString();
-    console.log(body);
     await fetch("https://id.twitch.tv/oauth2/token", {
         method: "POST",
         body: body,
